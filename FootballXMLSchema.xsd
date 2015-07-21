@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<schema
+    targetNamespace="http://example.org/FootballXMLSchema"
+    xmlns:tns="http://example.org/FootballXMLSchema"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="unqualified">
+	<!-- Bu xml şemaya dışarıdan erişmek için kullanılması gereken adres "targetNamespace" altında belirtilmiştir  -->
+	
+	<!-- 1 ile 99 arası değer alabilen integer tipli simple type  -->
+<simpleType name="TamsayiConstraint">
+    <restriction base="integer">
+      <minInclusive value="1"/>
+      <maxInclusive value="99"/>
+    </restriction>
+  </simpleType>
+  
+	<!-- max 20 karakter alabilen string tipli simple type  -->
+  <simpleType name="StringConstraint">
+    <restriction base="string">
+      <maxLength value="20"/>
+    </restriction>
+  </simpleType>
+
+	<!-- Futbolcuların bilgilerini  belirleyen element ve complex type   -->
+  <element name="Futbolcu" type="tns:FutbolcuInfo" ></element>
+  <complexType name="FutbolcuInfo"  >
+    <sequence>
+      <element name="TakimKodu" type="tns:TamsayiConstraint"   ></element>
+      <element name="FormaNumarasi" type="tns:TamsayiConstraint"  ></element>
+      <element name="AdSoyad" type="tns:StringConstraint" ></element>
+      <element name="GolSayisi" type="integer"  ></element>
+    </sequence>
+  </complexType>
+  
+	<!-- Takımları  belirleyen element ve complex type / Bir takımda min 11 oyuncu olduğundan en alttaki elemente kısıt konulmuştur  --> 
+  <element name="Takim" type="tns:TakimInfo"></element>
+  <complexType name="TakimInfo">
+    <sequence>
+      <element name="TakimKodu" type="tns:TamsayiConstraint" ></element>
+      <element name="TakimAdi" type="tns:StringConstraint" ></element>
+      <element name="Galibiyet" type="integer"></element>
+      <element name="Beraberlik" type="integer" ></element>
+      <element name="Maglubiyet" type="integer" ></element>
+      <element name="AtilanGol" type="integer"  ></element>
+      <element name="YenilenGol" type="integer" ></element>
+      <element name="Futbolcular" type="tns:FutbolcuInfo" minOccurs="11" maxOccurs="unbounded" ></element>
+    </sequence>
+  </complexType>
+
+	<!-- Bir lig 34 haftadan oluştuğu için, karmaşıklıkları önlemek adına böyle bir simple type tanımlanmıştır  -->
+  <simpleType name="HaftaNoInfo">
+    <restriction base="integer">
+      <maxInclusive value="34"></maxInclusive>
+      <minInclusive value="1"></minInclusive>
+    </restriction>
+  </simpleType>
+	
+	<!-- Karşılaşma bilgilerinin belirleyen element ve complex type  -->
+  <element name="Karsilasma" type="tns:KarsilasmaInfo"></element>
+  <complexType name ="KarsilasmaInfo">
+    <sequence>
+      <element name="HaftaNo" type="tns:HaftaNoInfo"></element>
+      <element name ="EvSahibiTakım" type="tns:TakimInfo"></element>
+      <element name="MisafirTakım" type="tns:TakimInfo" ></element>
+      <element name ="EvSahibiAtilanGol" type="integer" default="0" ></element>
+      <element name="MisafirAtilanGol" type="integer" default="0" ></element>
+    </sequence>
+  </complexType>
+
+</schema>

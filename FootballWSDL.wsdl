@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				  xmlns:tns="http://www.example.org/FootballWSDL/"
+			      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+				  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  name="FootballWSDL"
+                  targetNamespace="http://www.example.org/FootballWSDL/"
+                  xmlns:external="http://example.org/FootballXMLSchema">
+  <wsdl:types>
+
+    <xsd:schema targetNamespace="http://www.example.org/FootballWSDL/">
+    <!-- Önceden oluşturduğumuz xml Şemayı burdan import ederiz ve Wsdl dosyamızda kullanabilmek için "xmlns:external"
+     namespace'ine referans ederiz.  -->
+    <xsd:import namespace="http://example.org/FootballXMLSchema" 
+                schemaLocation="../src/FootballXMLSchema.xsd"></xsd:import>
+    <!-- İmport ettiğimiz şemamızdaki tipleri, wsdl içerisinde kullnabilmek ve okunabilirliği arttırmak adına
+         şuan tanımladığımız tiplere cast ediyoruz -->
+        <xsd:complexType name="ResoponseDataTypes">
+          <xsd:sequence>
+            <xsd:element name="TeamInfo" type="external:TakimInfo"/>
+            <xsd:element name="MatchInfo" type="external:KarsilasmaInfo" ></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  
+  <!-- Request mesajının içeriği -->
+  <wsdl:message name="TeamNoRequest">
+    <wsdl:part name="teamNo" type="xsd:integer"/>
+  </wsdl:message>
+  
+    <!-- Response mesajının içeriği -->
+  <wsdl:message name="TeamAndMatchInfoResponse">
+    <wsdl:part name="KarsılasmaVeMacBilgisi" type="tns:ResoponseDataTypes"/>
+  </wsdl:message>
+  
+    <!-- Port bilgisi belirtilmişti.Ayrıca Input ve output olarak nelerin gönderilip alınacağı belirtilmiştir. -->
+  <wsdl:portType name="TeamAndMatchInfoServicePortType">
+    <wsdl:operation name="GetTeamAndMatchInfo">
+      <wsdl:input message="tns:TeamNoRequest"/>
+      <wsdl:output message="tns:TeamAndMatchInfoResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+</wsdl:definitions>
